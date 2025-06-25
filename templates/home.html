@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>Medical Cost Prediction</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: rgba(255, 255, 255, 0.85);
+            --accent: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(160deg, #eff6ff 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 0 1rem;
+        }
+
+        .nav-wrapper .brand-logo {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: var(--primary-dark);
+            transition: all 0.3s ease;
+        }
+
+        .nav-wrapper .brand-logo:hover {
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .nav-wrapper ul a {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-wrapper ul a:hover {
+            color: var(--primary) !important;
+            background: transparent !important;
+        }
+
+        .sidenav {
+            background: var(--bg-light);
+            backdrop-filter: blur(12px);
+            padding: 1rem 0;
+        }
+
+        .sidenav li a {
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidenav li a:hover {
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.1) !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            padding: 5rem 0 3rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%233b82f6" fill-opacity="0.05" d="M0,192L48,181.3C96,171,192,149,288,149.3C384,149,480,171,576,186.7C672,203,768,213,864,197.3C960,181,1056,139,1152,122.7C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+            animation: fadeIn 1s ease-out 0.2s backwards;
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .card-form {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .input-field {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-field label {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+            position: absolute;
+            top: -0.6rem;
+            left: 2.5rem;
+            background: white;
+            padding: 0 0.4rem;
+            z-index: 1;
+        }
+
+        .input-field input, .input-field select {
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 8px;
+            padding: 0 2.5rem;
+            height: 3rem !important;
+            background: white;
+            font-size: 1rem;
+            color: var(--text-dark);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .input-field .prefix {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3b82f6;
+            font-size: 1.5rem;
+        }
+
+        .input-field input:focus, .input-field select:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        .input-field input:valid:not(:placeholder-shown), .input-field select:valid {
+            border-color: var(--accent) !important;
+        }
+
+        select.browser-default {
+            padding: 0 2rem 0 2.5rem;
+            color: var(--text-dark);
+            appearance: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat right 1rem center;
+            background-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+            border-radius: 8px;
+            text-transform: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 0 2.5rem;
+            height: 3.25rem;
+            line-height: 3.25rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Result Section */
+        .result-section {
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .result-card {
+            background: var(--bg-light);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            max-width: 500px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .result-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        /* Footer */
+        .page-footer {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%) !important;
+            padding-top: 3rem;
+        }
+
+        .page-footer h4 {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-footer p {
+            color: #dbeafe !important;
+            font-weight: 400;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .page-footer a {
+            color: #dbeafe !important;
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+
+        .page-footer a:hover {
+            color: #ffffff !important;
+            transform: translateX(5px);
+            display: inline-block;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            color: #ffffff !important;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.1);
+        }
+
+        .footer-copyright {
+            background: rgba(0,0,0,0.15) !important;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            .card-form {
+                padding: 1.5rem;
+            }
+            .btn {
+                width: 100%;
+            }
+            .result-value {
+                font-size: 1.8rem;
+            }
+            .input-field label {
+                left: 2rem;
+            }
+            .input-field input, .input-field select {
+                padding: 0 2rem;
+            }
+            .input-field .prefix {
+                left: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="nav-wrapper container">
+            <a id="logo-container" href="#" class="brand-logo" aria-label="MediCost Home">MediCost</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#about" aria-label="About section">About</a></li>
+                <li><a href="#contact" aria-label="Contact section">Contact</a></li>
+            </ul>
+            <ul id="nav-mobile" class="sidenav" aria-label="Mobile navigation">
+                <li><a href="#about" aria-label="About section">About</a></li>
+                <li><a href="#contact" aria-label="Contact section">Contact</a></li>
+            </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger" aria-label="Open mobile menu"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero" role="banner">
+        <div class="container">
+            <h1 class="hero-title">Predict Your Medical Costs</h1>
+            <p class="hero-subtitle">Get accurate estimates for your medical insurance expenses with our advanced prediction tool.</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about" style="padding: 4rem 0; background-color: #f8fafc;">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 center-align">
+                    <h2 style="color: #1e40af; margin-bottom: 2rem;">What is Predict Your Medical Costs?</h2>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 0;">
+                <div class="col s12 m8 offset-m2">
+                    <div class="card-panel white" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #334155;">
+                            "Predict Your Medical Costs" is an intelligent tool designed to help you estimate your potential healthcare expenses based on various personal factors. 
+                            Our advanced algorithm analyzes key health and lifestyle parameters to provide you with a personalized cost prediction, helping you plan your healthcare budget more effectively.
+                            <br><br>
+                            Whether you're considering a new insurance plan, planning for future medical needs, or simply curious about healthcare costs, our tool offers valuable insights to make informed decisions about your health and finances.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section" id="predict" role="main">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 center-align" style="margin-bottom: 3rem;">
+                    <h2 class="section-title" style="color: #1e40af; font-weight: 700; position: relative; display: inline-block; margin-bottom: 1.5rem;">
+                        <span style="position: relative; z-index: 1; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Estimate Your Medical Costs</span>
+                        <span style="position: absolute; bottom: -5px; left: 0; width: 60px; height: 4px; background: #3b82f6; border-radius: 2px;"></span>
+                    </h2>
+                    <p class="flow-text" style="color: #4b5563; max-width: 700px; margin: 0 auto; font-size: 1.1rem;">
+                        Fill in your details below to get an instant estimate of your medical insurance costs.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <form action="{{ url_for('predict') }}" method="post" class="col s12 m10 offset-m1 l8 offset-l2 card-form" role="form" aria-label="Cost prediction form">
+                    <div class="row" style="margin-bottom: 0;">
+                        <!-- Age Input -->
+                        <div class="col s12 m6 l4 input-field">
+                            <i class="material-icons prefix">person_outline</i>
+                            <input id="age" name="age" type="number" min="1" max="120" required class="validate" aria-required="true">
+                            <label for="age">Age</label>
+                            <span class="helper-text" style="color: #94a3b8; font-size: 0.8rem;">Enter your age (1-120)</span>
+                        </div>
+
+                        
+                        
+                        
+ <!-- Children Input -->
+ <div class="col s12 m6 l4 input-field">
+    <i class="material-icons prefix">child_care</i>
+    <input id="children" name="children" type="number" min="0" max="10" required class="validate" aria-required="true">
+    <label for="children">Children</label>
+    <span class="helper-text" style="color: #94a3b8; font-size: 0.8rem;">Number of dependents</span>
+</div>
+
+
+                        <!-- BMI Input -->
+                        <div class="col s12 m6 l4 input-field">
+                            <i class="material-icons prefix">monitor_weight</i>
+                            <input id="bmi" name="bmi" type="number" step="0.1" min="10" max="60" required class="validate" aria-required="true">
+                            <label for="bmi">BMI</label>
+                            <span class="helper-text" style="color: #94a3b8; font-size: 0.8rem;">Body Mass Index (e.g., 22.5)</span>
+                        </div>
+                        
+                        <!-- Gender Select -->
+                        <div class="col s12 m6 l4 input-field">
+                            <i class="material-icons prefix">people_outline</i>
+                            <select name="sex" id="sex" class="browser-default" required aria-required="true">
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+
+                       
+
+                        <!-- Smoker Select -->
+                        <div class="col s12 m6 l4 input-field">
+                            <i class="material-icons prefix">smoking_rooms</i>
+                            <select name="smoker" id="smoker" class="browser-default" required aria-required="true">
+                                <option value="" disabled selected>Smoking Status</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                       
+                        </div>
+
+                        <!-- Region Select -->
+                        <div class="col s12 m6 l4 input-field">
+                            <i class="material-icons prefix">location_on</i>
+                            <select name="region" id="region" class="browser-default" required aria-required="true">
+                                <option value="" disabled selected>Select Region</option>
+                                <option value="0">North India</option>
+                                <option value="1">South India</option>
+                                <option value="2">East India</option>
+                                <option value="3">West India</option>
+                                <option value="4">Central India</option>
+                                <option value="5">North-East India</option>
+                            </select>
+                           
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col s12 center" style="margin-top: 2rem;">
+                            <button type="submit" class="btn waves-effect waves-light">
+                                <span>Predict My Medical Cost</span>
+                                <i class="material-icons right" style="font-size: 1.35rem;">arrow_forward</i>
+                            </button>
+                            <p class="grey-text text-darken-1" style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8 !important; display: flex; align-items: center; justify-content: center;">
+                                <i class="material-icons tiny" style="margin-right: 0.4rem; font-size: 1rem; color: #94a3b8;">lock</i>
+                                Your information is secure and will not be stored.
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Result Section -->
+    {% if pred %}
+    <section class="result-section" id="result">
+        <div class="container">
+            <div class="result-card">
+                <h3 class="result-title">Estimated Cost</h3>
+                <p class="result-value">₹{{ pred }}</p>
+                <p class="hero-subtitle">This estimate is based on Indian healthcare standards and may vary.</p>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="page-footer" role="contentinfo" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col l4 s12">
+                    <h4>About MediCost</h4>
+                    <p>Empowering individuals with reliable medical cost predictions through cutting-edge technology.</p>
+                    <div class="social-links">
+                        <a href="#!" aria-label="LinkedIn"><i class="material-icons">link</i></a>
+                        <a href="#!" aria-label="GitHub"><i class="material-icons">code</i></a>
+                        <a href="#!" aria-label="Twitter"><i class="material-icons">chat</i></a>
+                    </div>
+                </div>
+                <div class="col l2 offset-l2 s12">
+                    <h4>Links</h4>
+                    <ul>
+                        <li><a href="#hero" aria-label="Home section">Home</a></li>
+                        <li><a href="#about" aria-label="About section">About</a></li>
+                        <li><a href="#contact" aria-label="Contact section">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col l2 s12">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#!" aria-label="FAQ">FAQ</a></li>
+                        <li><a href="#!" aria-label="Terms of Service">Terms</a></li>
+                        <li><a href="#!" aria-label="Privacy Policy">Privacy</a></li>
+                    </ul>
+                </div>
+                <div class="col l2 s12">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:support@medicost.com" aria-label="Email support">Email</a></li>
+                        <li><a href="#!" aria-label="Live chat">Live Chat</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2025 MediCost
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../static/js/materialize.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.sidenav').sidenav({
+                edge: 'right',
+                draggable: true
+            });
+            $('select').formSelect();
+            $('a[href*="#"]').not('.sidenav-close').click(function(event) {
+                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                    event.preventDefault();
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                    if (target.length) {
+                        $('html, body').animate({
+                            scrollTop: target.offset().top - 70
+                        }, 800);
+                        return false;
+                    }
+                }
+            });
+            $('input, select').on('change input', function() {
+                if($(this).val() && $(this).is(':valid')) {
+                    $(this).addClass('valid');
+                } else {
+                    $(this).removeClass('valid');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
